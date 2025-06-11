@@ -1,0 +1,29 @@
+/* IMPORTACIONES DE ESTILOS */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600&display=swap");
+@import "tailwindcss";
+@import "flowbite/src/themes/default";
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+@import "boxicons/css/boxicons.min.css";
+
+/* ESTILOS GENERALES */
+:root {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  /* background: linear-gradient(50deg, #030712 40%, #052e16); */
+  background: linear-gradient(to right, #030712, #062513);
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+}
+
+/* ESTILOS PARA LOS FONDOS DE LOS INPUTS */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: #38a169 !important;
+}

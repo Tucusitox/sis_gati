@@ -1,0 +1,84 @@
+<section class="mt-20 mb-10 md:ml-72 lg:my-0 p-4">
+
+    <form (ngSubmit)="newAsset()" class="bg-gray-950 rounded-lg border-2 border-green-500 p-4">
+
+        <div class="flex flex-col rounded-sm text-green-500 text-center py-2">
+            <h1 class="text-2xl"><b>Registrar un Nuevo Activo</b></h1>
+            <p>Por favor, Complete todos los cambios</p>
+        </div>
+        <hr class="text-green-500 my-2"> 
+
+        <!-- MENSAJE DE CARGA ESPERANDO RESPUESTA DEL BACK -->
+        <div class="mb-4">
+            <app-alert-message [cargando]="isCargando" [typeAlert]="'cargaModal'"/>
+        </div>
+
+        <app-alert-message 
+            [typeAlert]="'success'"
+            [visible]="successRequest" 
+            [message]="successMessage" 
+            (closed)="onAlertClosed()" 
+        />
+
+        <!-- INPUTS DEL FORMULARIO -->
+        <select name="tipoActivo" [(ngModel)]="idTypeAsset"
+                class="text-green-500 border-2 border-green-500
+                bg-gray-950 rounded-lg cursor-pointer w-full"> 
+                <option value={{0}}>Tipo de Activo</option>
+                @for (item of typeAssets; track item.id_typeAsset) {
+                    <option value={{item.id_typeAsset}}>{{item.typeAsset_name}}</option>
+                }
+                
+        </select>
+        <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+            ¡{{ typeAssetErrorsMessg }}!
+        </p> 
+
+        <select name="location" [(ngModel)]="idLocationAsset"
+                class="text-green-500 border-2 border-green-500 mt-4
+                bg-gray-950 rounded-lg cursor-pointer w-full"> 
+                <option value={{0}}>Ubicación del activo</option>
+                @for (item of locationAsset; track item.id_location) {
+                    <option value={{item.id_location}}>{{item.AssetsLocations}}</option>
+                }
+        </select>
+        <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+            ¡{{ locationErrorsMessg }}!
+        </p> 
+
+        <div class="flex flex-col mt-4">
+            <input type="text" placeholder="Serial del activo" class="placeholder-green-500 border-2 border-green-500 
+              bg-transparent rounded-lg text-green-500" required [(ngModel)]="serialAsset" name="serialAsset">
+              <!-- VALIDACION DEL INPUT -->
+              <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+                ¡{{ serialErrorsMessg }}!
+              </p>
+        </div>
+
+        <div class="flex flex-col mt-4">
+            <input type="text" placeholder="Modelo del activo" class="placeholder-green-500 border-2 border-green-500 
+              bg-transparent rounded-lg text-green-500" required [(ngModel)]="modelAsset" name="modelAsset">
+              <!-- VALIDACION DEL INPUT -->
+              <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+                ¡{{ modelErrorsMessg }}!
+              </p>
+        </div>
+
+        <div class="flex flex-col mt-4">
+            <input type="text" placeholder="Marca del activo" class="placeholder-green-500 border-2 border-green-500 
+              bg-transparent rounded-lg text-green-500" required [(ngModel)]="markAsset" name="markAsset">
+              <!-- VALIDACION DEL INPUT -->
+              <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+                ¡{{ markErrorsMessg }}!
+              </p>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="w-full bg-green-500 border-2 border-green-500 text-black 
+                hover:bg-transparent hover:text-green-500 rounded-lg cursor-pointer p-2">
+                <b>Registrar</b>
+            </button>
+        </div>
+    </form>
+
+</section>

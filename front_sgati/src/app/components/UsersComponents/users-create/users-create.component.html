@@ -1,0 +1,72 @@
+<div id="default-modal" tabindex="-1" aria-hidden="true" 
+    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 
+    justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <form (ngSubmit)="newUser()" class="relative bg-gray-950 border-2 border-green-500 text-green-500 rounded-lg">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                <div class="flex flex-col">
+                    <h1 class="text-xl"><b>Registrar un Nuevo Usuario</b></h1>
+                    <p>Por favor, Complete todos los campos</p>
+                </div>
+                <button type="button" data-modal-hide="default-modal" 
+                    class="cursor-pointer text-red-700 hover:text-red-500">
+                    <i class='bx bx-x-circle text-3xl'></i>
+                </button>
+            </div>
+
+            <!-- MENSAJE DE CARGA ESPERANDO RESPUESTA DEL BACK -->
+            <app-alert-message [cargando]="isCargando" [typeAlert]="'cargaModal'"/>
+
+            <app-alert-message 
+                [typeAlert]="'success'"
+                [visible]="successRequest" 
+                [message]="successMessage" 
+                (closed)="onAlertClosed()" 
+            />
+
+            <!-- Modal body -->
+            <div class="p-4 md:p-5 space-y-4">
+                <select name="location" [(ngModel)]="idRol"
+                        class="text-green-500 border-2 border-green-500
+                        bg-gray-950 rounded-lg cursor-pointer w-full"> 
+                        <option value={{0}}>Seleccione un rol</option>
+                        @for (item of allRols; track item.id_rol) {
+                            <option value={{item.id_rol}}>{{item.rol_name}}</option>
+                        }
+                </select>
+                <p *ngIf="inputsValidate" class="text-red-700 ml-1">
+                    ¡{{ userRolErrorsMessg }}!
+                </p> 
+
+                <div class="flex flex-col">
+                    <input type="text" placeholder="Nombre de usuario" class="placeholder-green-500 border-2 border-green-500 
+                      bg-transparent rounded-lg text-green-500" required [(ngModel)]="userName" name="serialAsset">
+                      <p *ngIf="inputsValidate" class="text-red-700 ml-1">
+                        ¡{{ userNameErrorsMessg }}!
+                      </p>
+                </div>
+    
+                <div class="flex flex-col">
+                    <input type="text" placeholder="Correo del usuario" class="placeholder-green-500 border-2 border-green-500 
+                      bg-transparent rounded-lg text-green-500" required [(ngModel)]="userEmail" name="serialAsset">
+                      <p *ngIf="inputsValidate" class="text-red-700 ml-1">
+                        ¡{{ userEmailErrorsMessg }}!
+                      </p>
+                </div>
+
+            </div>
+
+            <!-- Modal footer -->
+            <div class="flex items-center p-4 md:p-5 border-t">
+                <button type="submit" 
+                    class="w-full bg-green-500 border-2 border-green-500 text-gray-950 
+                    cursor-pointer hover:bg-transparent hover:text-green-500 rounded-lg p-2">
+                    <b>Registrar</b>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

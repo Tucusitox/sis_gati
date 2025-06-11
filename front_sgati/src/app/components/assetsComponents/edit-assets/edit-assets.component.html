@@ -1,0 +1,81 @@
+<div [id]="idModal" [class.hidden]="!isOpen" [class.flex]="isOpen"
+    class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full
+    md:inset-0 h-[calc(100%-1rem)] max-h-full" style="backdrop-filter: blur(1.5px);">
+
+    <div class="relative p-4 w-full max-w-2xl max-h-full" >
+        <!-- Modal content -->
+        <form (ngSubmit)="assetUpdate()" 
+            class="relative text-green-500 bg-gray-950 border-2 border-green-500 rounded-lg">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between border-b-2 rounded-t p-4">
+                <h3 class="text-2xl font-semibold">
+                Actualizar el activo:
+                <span class="text-yellow-500">{{tittleModal}}</span>
+                </h3>
+                <a (click)="closeModal()" class="cursor-pointer text-red-700 hover:text-red-500">
+                    <i class='bx bx-x-circle text-3xl'></i>
+                </a>
+            </div>
+            
+            <!-- MENSAJE DE CARGA ESPERANDO RESPUESTA DEL BACK -->
+            <app-alert-message [cargando]="isCargando" [typeAlert]="'cargaModal'"/>
+
+            <!-- Modal body ACTIVOS -->
+            <div class="flex flex-col justify-center p-4">
+
+                <select name="tipoActivo" [(ngModel)]="idTypeAsset"
+                        class="text-green-500 border-2 border-green-500
+                        bg-gray-950 rounded-lg cursor-pointer w-full"> 
+                        @for (item of typeAssetUpdateModal; track item.id_typeAsset) {
+                            <option value={{item.id_typeAsset}}>{{item.typeAsset_name}}</option>
+                        }
+                </select>
+                <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+                    ¡Por favor, complete el campo correctamente!
+                </p> 
+
+                <select name="locacion" [(ngModel)]="idLocationAsset"
+                        class="text-green-500 border-2 border-green-500 mt-4
+                        bg-gray-950 rounded-lg cursor-pointer w-full"> 
+                        @for (item of locationAsset; track item.id_location) {
+                            <option value={{item.id_location}}>{{item.AssetsLocations}}</option>
+                        }
+                </select>
+                <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+                    ¡Por favor, complete el campo correctamente!
+                </p> 
+
+                <input type="text" placeholder="Tercer campo" class="placeholder-green-500 border-2 border-green-500 
+                    bg-transparent rounded-lg text-green-500 mt-4" required [(ngModel)]="serialAsset" 
+                    name={{serialAsset}} value={{serialAsset}}>
+                <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+                    ¡Por favor, complete el campo correctamente!
+                </p> 
+
+                <input type="text" placeholder="Tercer campo" class="placeholder-green-500 border-2 border-green-500 
+                    bg-transparent rounded-lg text-green-500 mt-4" required [(ngModel)]="modelAsset" 
+                    name={{modelAsset}} value={{modelAsset}}>
+                <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+                    ¡Por favor, complete el campo correctamente!
+                </p> 
+                <input type="text" placeholder="Tercer campo" class="placeholder-green-500 border-2 border-green-500 
+                    bg-transparent rounded-lg text-green-500 mt-4" required [(ngModel)]="markAsset" 
+                    name={{markAsset}} value={{markAsset}}>
+                <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+                    ¡Por favor, complete el campo correctamente!
+                </p> 
+
+            </div>
+
+            <!-- Modal footer -->
+            <div class="flex justify-center items-center border-t-2 gap-2 p-4">
+                <button type="submit" 
+                    class="w-full bg-green-500 border-2 border-green-500 font-bold text-gray-950 
+                    hover:bg-transparent hover:text-green-500 cursor-pointer rounded-lg p-2">
+                    Guardar
+                </button>
+            </div>
+
+        </form>
+     </div>
+</div>

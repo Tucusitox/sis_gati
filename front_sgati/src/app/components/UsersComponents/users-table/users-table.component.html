@@ -1,0 +1,155 @@
+<section class="mt-20 mb-10 md:ml-72 lg:my-0 p-4">
+
+    <div class="bg-gray-950 rounded-lg border-2 border-green-500 p-4">
+        
+        <div class="flex flex-col md:flex-row justify-between items-center text-green-500 border-b border-green-500">
+            <div class="py-2 lg:text-start text-center">
+                <h1 class="text-2xl"><b>Usuarios del sistema</b></h1>
+                <p>Información General</p>
+            </div>
+            <!-- BOTON PARA LLAMAR MODAL PARA CREAR NUEVO USUARIO -->
+            <div class="py-2">
+                <button type="button" data-modal-target="default-modal" data-modal-toggle="default-modal"
+                    class="bg-green-500 border-2 border-green-500 text-gray-950 cursor-pointer 
+                    rounded-lg hover:bg-transparent hover:text-green-500 p-2">
+                    <i class='bx bx-plus-medical mr-1'></i>
+                    <b>Crear usuario</b>
+                </button>
+            </div>
+        </div>
+
+        <div class="w-full flex justify-between items-center my-4">
+            <!-- BOTONES DE EXPORTACION -->
+            <div class="flex gap-2 mr-2">
+              <!-- EXCEL -->
+              <app-export-excel 
+                [headerTable]="headersTable" 
+                [dataTable]="itemsTable" 
+                [typeTable]="typeTable"
+              /> 
+              <!-- PDF -->
+              <app-export-pdf 
+                [headerTable]="headersTable" 
+                [dataTable]="itemsTable" 
+                [typeTable]="typeTable"
+              /> 
+            </div>
+        
+            <!-- FILTRO DE BUSQUEDA -->
+            <form class="w-full bg-transparent">   
+                <div class="relative text-green-500">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <i class='bx bx-search-alt-2'></i>
+                    </div>
+                    <input type="text" name="searchValue" [(ngModel)]="searchValue" (input)="findItem(searchValue)"
+                        class="w-full placeholder:text-green-500
+                        bg-transparent border-2 border-green-500 rounded-lg ps-10 py-1.5" 
+                        placeholder="Buscar por nombre usuario">            
+                </div>
+            </form>
+        
+        </div>
+        
+        <!-- ESPERAR A QUE EL SERVIDOR DEVUELVA INFORMACION -->
+        @if (itemsTable.length === 0 && !searchActivo) {
+          <app-spinner [mensajeDeCarga]="'Por favor espere, se esta procesando la solicitud'"/>
+        }
+
+        <!-- MENSAJE DE CARGA ESPERANDO RESPUESTA DEL BACK -->
+        <div class="mb-3">
+            <app-alert-message [cargando]="isCargando" [typeAlert]="'cargaModal'"/>
+        </div> 
+
+        <!-- MENSAJE DE EDICION EXITOSA -->
+        <app-alert-message 
+          [typeAlert]="'success'"
+          [visible]="successEdit" 
+          [message]="successMessage" 
+          (closed)="onAlertClosed()" 
+        />
+        <!-- CARD CON AL TABLA -->
+        <div class="w-full overflow-x-auto overflow-y-hidden bg-gray-950">
+            <table id="myTable" class="w-full min-w-max text-sm text-left">
+              <thead class="text-gray-950 bg-green-500 uppercase text-center">
+                <tr>
+                    @for (header of headersTable; track $index) {
+                        <th scope="col" class="px-4 py-2">{{header}}</th>
+                    }
+                    <th scope="col" class="px-4 py-2">STATUS</th>
+                    <th scope="col" class="px-4 py-2">ACCIONES</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- EN CASO DE QUE LA BUSQUEDA DE ACTIVO ESTE VACIA -->
+                @if (searchActivo) {
+                  <tr>
+                      <td colspan="15" class="text-xl text-center text-red-700 p-4">
+                          ¡No se encontro ningún item!
+                      </td>
+                  </tr>
+                }
+                <!---------------- ITERAR ITEMS DE LA TABLA PARA USUARIOS ------------------>
+                @for (item of itemsTable | paginate: { itemsPerPage: 6, currentPage: pageActual }; track item.user_id) {
+                    <tr class="border-b border-green-500 hover:bg-gray-900 text-green-500 text-center">
+                        <td class="p-4">{{ item.name }}</td>
+                        <td class="p-4">{{ item.email }}</td>
+                        <td class="p-4">{{ item.rol_name }}</td>
+                        <td class="p-4">{{ item.status }}</td>
+                        <td class="p-4">
+                            <a (click)="openModal('modalEdit-' + item.user_id)" type="button"
+                                class="border-2 border-blue-500 cursor-pointer px-2 py-1.5 bg-blue-500 
+                                text-gray-950 rounded-sm mr-2 hover:text-blue-500 hover:bg-gray-950" title="Editar">
+                                <i class='bx bxs-edit text-base'></i>
+                            </a>
+                            @if (item.status !== 'bloqueado') {
+                                <a (click)="blockDesblockUsers('block', item.user_id)" type="button"
+                                    class="border-2 border-yellow-500 cursor-pointer px-2 py-1.5 bg-yellow-500 
+                                    text-gray-950 rounded-sm mr-2 hover:text-yellow-500 hover:bg-gray-950" 
+                                    title="Bloquear">
+                                    <i class='bx bx-block text-base'></i>
+                                </a>
+                            } @else {
+                                <a (click)="blockDesblockUsers('desblock', item.user_id)" type="button"
+                                    class="border-2 border-green-500 cursor-pointer px-2 py-1.5 bg-green-500 
+                                    text-gray-950 rounded-sm mr-2 hover:text-green-500 hover:bg-gray-950" 
+                                    title="Desbloquear">
+                                    <i class='bx bx-check-circle text-base'></i> 
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+        
+              </tbody>
+            </table>
+        
+        </div>
+      
+    </div>
+
+    <!-- CAJON CON EL PAGINADOR -->
+    <div class="flex justify-center items-center my-5 -mb-3 my-pagination">
+        <pagination-controls 
+            (pageChange)="pageActual = $event"     
+            previousLabel=""
+            nextLabel="">
+        </pagination-controls>
+    </div>
+
+    <!-- MODALES DE EDICION PARA USUARIOS -->
+    @for (item of itemsTable; track item.id_employee) {
+        <app-user-edit 
+            [idModal]="'modalEdit-' + item.user_id"
+            [isOpen]="openModalId === 'modalEdit-' + item.user_id"
+            [tittleModal]="item.name"
+            [rolsAll]="allRols"
+            [idUser]="item.user_id"
+            [idRol]="item.fk_rol"
+            [userName]="item.name"
+            [userEmail]="item.email"
+            (modalClosed)="handleModalClosed()"
+            (editMessageSuccess)="editSucces($event)"
+        />
+    }
+    <app-users-create (refresComponent)="ngOnInit()"/>
+</section>

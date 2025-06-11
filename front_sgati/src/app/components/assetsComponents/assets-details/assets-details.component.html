@@ -1,0 +1,70 @@
+<div [id]="idModal" [class.hidden]="!isOpen" [class.flex]="isOpen"
+    class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full
+    md:inset-0 h-[calc(100%-1rem)] max-h-full" style="backdrop-filter: blur(1.5px);">
+
+    <div class="relative p-4 w-full max-w-2xl max-h-full" >
+        <!-- Modal content -->
+        <div class="relative text-green-500 bg-gray-950 border-2 border-green-500 rounded-lg">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between border-b-2 rounded-t p-4">
+                <h3 class="text-2xl font-semibold">
+                Detalles del activo:
+                <span class="text-yellow-500">{{ serial }}</span>
+                </h3>
+                <a (click)="closeModal()" class="cursor-pointer text-red-700 hover:text-red-500">
+                    <i class='bx bx-x-circle text-3xl'></i>
+                </a>
+            </div>
+
+            <div class="flex bg-transparent text-2xl p-4">
+                <!-- Columna 1 (5 párrafos) -->
+                <div class="w-1/2 pr-2">
+                    <p class="text-green-500 font-medium">
+                        Serial: 
+                        <span class="text-yellow-500">{{ serial }}</span>
+                    </p>
+                    <p class="text-green-500 font-medium">
+                        Modelo: 
+                        <span class="text-yellow-500">{{ model }}</span>
+                    </p>
+                    <p class="text-green-500 font-medium">
+                        Marca: 
+                        <span class="text-yellow-500">{{ mark }}</span>
+                    </p>
+                    <p class="text-green-500 font-medium">
+                        Tipo de Activo: 
+                        <span class="text-yellow-500">{{ typeAsset }}</span>
+                    </p>
+                    <p class="text-green-500 font-medium">
+                        Ciudad: <span class="text-yellow-500">{{ city }}</span>
+                    </p>
+                </div>
+                
+                <!-- Columna 2 (4 párrafos) -->
+                <div class="w-1/2 pl-2">
+                    <p class="text-green-500 font-medium">
+                        Sede: <span class="text-yellow-500">{{ sede }}</span>
+                    </p>
+                    <p class="text-green-500 font-medium">
+                        Tienda: <span class="text-yellow-500">{{ store }}</span>
+                    </p>
+                    <p class="text-green-500 font-medium">
+                        Fecha de Registro: <span class="text-yellow-500">{{ dateRegister }}</span>
+                    </p>
+                    <p class="text-green-500 font-medium">
+                        @if (status === 'asignado') {
+                            Estatus: <span class="text-red-500">{{ status }}</span>
+                        }
+                        @else {
+                            Estatus: <span class="text-blue-500">{{ status }}</span>
+                        }
+                    </p>
+                    <p class="text-green-500 font-medium">
+                        UsuarioA: <span class="text-yellow-500">{{ usuarioAsignado || "Ninguno" }}</span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+     </div>
+</div>

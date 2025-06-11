@@ -1,0 +1,137 @@
+<div class="w-full flex justify-between items-center my-4">
+    <!-- BOTONES DE EXPORTACION -->
+    <div class="flex gap-2 mr-2">
+      <!-- EXCEL -->
+      <app-export-excel 
+        [headerTable]="headersTable" 
+        [dataTable]="itemsTable" 
+        [typeTable]="typeTable"
+      /> 
+      <!-- PDF -->
+      <app-export-pdf 
+        [headerTable]="headersTable" 
+        [dataTable]="itemsTable" 
+        [typeTable]="typeTable"
+      /> 
+    </div>
+
+    <!-- FILTRO DE BUSQUEDA -->
+    <form class="w-full bg-transparent">   
+        <div class="relative text-green-500">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <i class='bx bx-search-alt-2'></i>
+            </div>
+            <input type="text" name="searchValue" [(ngModel)]="searchValue" (input)="findItem(searchValue)"
+                class="w-full placeholder:text-green-500
+                bg-transparent border-2 border-green-500 rounded-lg ps-10 py-1.5" 
+                placeholder="Buscar activo por serial">            
+        </div>
+    </form>
+
+</div>
+
+<!-- ESPERAR A QUE EL SERVIDOR DEVUELVA INFORMACION -->
+@if (itemsTable.length === 0 && !searchActivo) {
+  <app-spinner [mensajeDeCarga]="'Por favor espere, se esta procesando la solicitud'"/>
+}
+<!-- MENSAJE DE EDICION EXITOSA -->
+<app-alert-message 
+  [typeAlert]="'success'"
+  [visible]="successEdit" 
+  [message]="successMessage" 
+  (closed)="onAlertClosed()" 
+/>
+<!-- CARD CON AL TABLA -->
+<div class="w-full overflow-x-auto overflow-y-hidden bg-gray-950">
+    <table id="myTable" class="w-full min-w-max text-sm text-left">
+      <thead class="text-gray-950 bg-green-500 uppercase">
+        <tr>
+            @for (header of headersTable; track $index) {
+                <th scope="col" class="px-4 py-2">{{header}}</th>
+            }
+            <th scope="col" class="px-4 py-2">ACCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- EN CASO DE QUE LA BUSQUEDA DE ACTIVO ESTE VACIA -->
+        @if (searchActivo) {
+          <tr>
+              <td colspan="15" class="text-xl text-center text-red-700 p-4">
+                  ¡No se encontro ningún item!
+              </td>
+          </tr>
+        }
+        <!---------------- ITERAR ITEMS DE LA TABLA PARA ACTIVOS ------------------>
+        @for (item of itemsTable | paginate: { itemsPerPage: 6, currentPage: pageActual }; track item.id_asset) {
+            <tr class="border-b border-green-500 hover:bg-gray-900 text-green-500">
+                <td class="p-4">{{ item.asset_serial }}</td>
+                <td class="p-4">{{ item.asset_model }}</td>
+                <td class="p-4">{{ item.asset_mark }}</td>
+                <td class="p-4">{{ item.asset_dateRegister }}</td>
+                <td class="p-4">{{ item.typeAsset_name }}</td>
+                <td class="p-4">
+                    <a  (click)="openModal('modalDetail-' + item.id_asset)" type="button"
+                        class="border-2 border-yellow-500 cursor-pointer px-2 py-1.5 bg-yellow-500 
+                        text-gray-950 rounded-sm mr-2 hover:text-yellow-500 hover:bg-gray-950" 
+                        title="Detalles">
+                        <i class='bx bxs-user-detail text-base'></i>
+                    </a>
+                    <a (click)="openModal('modalEdit-' + item.id_asset)" type="button"
+                        class="border-2 border-blue-500 cursor-pointer px-2 py-1.5 bg-blue-500 
+                        text-gray-950 rounded-sm mr-2 hover:text-blue-500 hover:bg-gray-950" title="Editar">
+                        <i class='bx bxs-edit text-base'></i>
+                    </a>
+                </td>
+            </tr>
+        }
+
+      </tbody>
+    </table>
+
+</div>
+<!-- CAJON CON EL PAGINADOR -->
+<div class="flex justify-center items-center my-5 -mb-3 my-pagination">
+  <pagination-controls 
+      (pageChange)="pageActual = $event"     
+      previousLabel=""
+      nextLabel="">
+  </pagination-controls>
+</div>
+
+<!-- MODALES DE EDICION PARA ACTIVOS -->
+@for (item of itemsTable; track item.id_asset) {
+    <app-edit-assets 
+      [idModal]="'modalEdit-' + item.id_asset"
+      [isOpen]="openModalId === 'modalEdit-' + item.id_asset"
+      (modalClosed)="handleModalClosed()"
+      [tittleModal]="item.asset_serial"
+      [serialAsset]="item.asset_serial"
+      [modelAsset]="item.asset_model"
+      [markAsset]="item.asset_mark"
+      [idLocationAsset]="item.fk_location"
+      [idTypeAsset]="item.id_typeAsset"
+      [locationAsset]="locationAsset"
+      [typeAssetUpdateModal]="typeAssetUpdateModal"
+      [idAsset]="item.id_asset"
+      (editMessageSuccess)="editSucces($event)"
+    />
+}
+
+<!-- VER LOS DETALLES DE CADA ACTIVO -->
+@for (item of itemsTable; track item.id_asset) {
+  <app-assets-details 
+    [idModal]="'modalDetail-' + item.id_asset"
+    [isOpen]="openModalId === 'modalDetail-' + item.id_asset"
+    (modalDetailClosed)="handleModalClosed()"
+    [serial]="item.asset_serial"
+    [model]="item.asset_model"
+    [mark]="item.asset_mark"
+    [typeAsset]="item.typeAsset_name"
+    [city]="item.city"
+    [sede]="item.sede"
+    [store]="item.store"
+    [dateRegister]="item.asset_dateRegister"
+    [status]="item.asset_status"
+    [usuarioAsignado]="item.employee_userName"
+  />
+}

@@ -1,0 +1,20 @@
+<!-- NAVBAR DE LA APLICACION -->
+@if (navbarIsVisible) {
+  <nav class="lg:hidden fixed w-full flex justify-between border-b-2 border-green-500
+      text-green-500 p-3 top-0 z-20" style="backdrop-filter: blur(10px);">
+      <div class="flex items-center cursor-pointer" routerLink="/dashboard">
+        <img src="logoSgati.png" class="w-10 h-10"/>
+        <p class="text-xl mx-2">
+          <b>Software GATI</b>
+        </p>
+      </div>
+      <!-- BOTON PARA ACTIVAR EL SIDEBA EN RESPONSIVE -->
+      <button type="button" class="cursor-pointer hover:text-green-700"
+        data-drawer-target="sidebar-multi-level-sidebar" 
+        data-drawer-toggle="sidebar-multi-level-sidebar" 
+        aria-controls="sidebar-multi-level-sidebar">
+        <i class='bx bx-menu text-4xl'></i>
+      </button>
+  </nav>
+}
+

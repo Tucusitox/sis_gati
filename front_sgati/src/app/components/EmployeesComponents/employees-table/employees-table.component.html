@@ -1,0 +1,122 @@
+<section class="mt-20 mb-10 md:ml-72 lg:my-0 p-4">
+
+    <div class="bg-gray-950 rounded-lg border-2 border-green-500 p-4">
+        
+        <div class="flex flex-col border-b-2 border-green-500 text-green-500 pb-2 mb-2">
+            <h1 class="text-2xl"><b>Empleados del sistema</b></h1>
+            <p>Información General</p>
+        </div>
+        <div class="w-full flex justify-between items-center my-4">
+            <!-- BOTONES DE EXPORTACION -->
+            <div class="flex gap-2 mr-2">
+              <!-- EXCEL -->
+              <app-export-excel 
+                [headerTable]="headersTable" 
+                [dataTable]="itemsTable" 
+                [typeTable]="typeTable"
+              /> 
+              <!-- PDF -->
+              <app-export-pdf 
+                [headerTable]="headersTable" 
+                [dataTable]="itemsTable" 
+                [typeTable]="typeTable"
+              /> 
+            </div>
+        
+            <!-- FILTRO DE BUSQUEDA -->
+            <form class="w-full bg-transparent">   
+                <div class="relative text-green-500">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <i class='bx bx-search-alt-2'></i>
+                    </div>
+                    <input type="text" name="searchValue" [(ngModel)]="searchValue" (input)="findItem(searchValue)"
+                        class="w-full placeholder:text-green-500
+                        bg-transparent border-2 border-green-500 rounded-lg ps-10 py-1.5" 
+                        placeholder="Buscar por usuario">            
+                </div>
+            </form>
+        
+        </div>
+        
+        <!-- ESPERAR A QUE EL SERVIDOR DEVUELVA INFORMACION -->
+        @if (itemsTable.length === 0 && !searchActivo) {
+          <app-spinner [mensajeDeCarga]="'Por favor espere, se esta procesando la solicitud'"/>
+        }
+        <!-- MENSAJE DE EDICION EXITOSA -->
+        <app-alert-message 
+          [typeAlert]="'success'"
+          [visible]="successEdit" 
+          [message]="successMessage" 
+          (closed)="onAlertClosed()" 
+        />
+        <!-- CARD CON AL TABLA -->
+        <div class="w-full overflow-x-auto overflow-y-hidden bg-gray-950">
+            <table id="myTable" class="w-full min-w-max text-sm text-left">
+              <thead class="text-gray-950 bg-green-500 uppercase text-center">
+                <tr>
+                    @for (header of headersTable; track $index) {
+                        <th scope="col" class="px-4 py-2">{{header}}</th>
+                    }
+                    <th scope="col" class="px-4 py-2">ACCIONES</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- EN CASO DE QUE LA BUSQUEDA DE ACTIVO ESTE VACIA -->
+                @if (searchActivo) {
+                  <tr>
+                      <td colspan="15" class="text-xl text-center text-red-700 p-4">
+                          ¡No se encontro ningún item!
+                      </td>
+                  </tr>
+                }
+                <!---------------- ITERAR ITEMS DE LA TABLA PARA EMPLEADOS ------------------>
+                @for (item of itemsTable | paginate: { itemsPerPage: 6, currentPage: pageActual }; track item.id_employee) {
+                    <tr class="border-b border-green-500 hover:bg-gray-900 text-green-500 text-center">
+                        <td class="p-4">{{ item.employee_userName }}</td>
+                        <td class="p-4">{{ item.employee_name }} {{ item.employee_lastName }}</td>
+                        <td class="p-4">{{ item.UbicacionEmpleado }}</td>
+                        <td class="p-4">{{ item.ActivosAsignados }}</td>
+                        <td class="p-4">
+                            <a (click)="openModal('modalEdit-' + item.id_employee)" type="button"
+                                class="border-2 border-blue-500 cursor-pointer px-2 py-1.5 bg-blue-500 
+                                text-gray-950 rounded-sm mr-2 hover:text-blue-500 hover:bg-gray-950" title="Editar">
+                                <i class='bx bxs-edit text-base'></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+        
+              </tbody>
+            </table>
+        
+        </div>
+      
+    </div>
+
+    <!-- CAJON CON EL PAGINADOR -->
+    <div class="flex justify-center items-center my-5 -mb-3 my-pagination">
+        <pagination-controls 
+            (pageChange)="pageActual = $event"     
+            previousLabel=""
+            nextLabel="">
+        </pagination-controls>
+    </div>
+
+    <!-- MODALES DE EDICION PARA ACTIVOS -->
+    @for (item of itemsTable; track item.id_employee) {
+        <app-employees-edit 
+            [idModal]="'modalEdit-' + item.id_employee"
+            [isOpen]="openModalId === 'modalEdit-' + item.id_employee"
+            (modalClosed)="handleModalClosed()"
+            [idEmployee]="item.id_employee"
+            [tittleModal]="item.employee_userName"
+            [employeeUserNamme]="item.employee_userName"
+            [employeeName]="item.employee_name"
+            [employeeLastName]="item.employee_lastName"
+            [idLocationEmployee]="item.fk_location"
+            [locationUpdateEmployee]="locationsEmployee"
+            (editMessageSuccess)="editSucces($event)"
+        />
+    }
+
+</section>

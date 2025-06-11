@@ -1,0 +1,71 @@
+<section class="mt-20 mb-10 md:ml-72 lg:my-0 p-4">
+
+    <form (ngSubmit)="newEmployee()" class="bg-gray-950 rounded-lg border-2 border-green-500 p-4">
+
+        <div class="flex flex-col rounded-sm text-green-500 text-center py-2">
+            <h1 class="text-2xl"><b>Registrar un Nuevo Empleado</b></h1>
+            <p>Por favor, Complete todos los campos</p>
+        </div>
+        <hr class="text-green-500 my-2"> 
+
+        <!-- MENSAJE DE CARGA ESPERANDO RESPUESTA DEL BACK -->
+        <div class="mb-4">
+            <app-alert-message [cargando]="isCargando" [typeAlert]="'cargaModal'"/>
+        </div>
+
+        <app-alert-message 
+            [typeAlert]="'success'"
+            [visible]="successRequest" 
+            [message]="successMessage" 
+            (closed)="onAlertClosed()" 
+        />
+
+        <!-- INPUTS DEL FORMULARIO -->
+        <select name="location" [(ngModel)]="idLocationEmployee"
+                class="text-green-500 border-2 border-green-500 mt-4
+                bg-gray-950 rounded-lg cursor-pointer w-full"> 
+                <option value={{0}}>Ubicación del Empleado</option>
+                @for (item of locationsEmployee; track item.id_location) {
+                    <option value={{item.id_location}}>{{item.EmployeeLocations}}</option>
+                }
+        </select>
+        <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+            ¡{{ locationErrorsMessg }}!
+        </p> 
+
+        <div class="flex flex-col mt-4">
+            <input type="text" placeholder="Usuario" class="placeholder-green-500 border-2 border-green-500 
+              bg-transparent rounded-lg text-green-500" required [(ngModel)]="employeeUserName" name="serialAsset">
+              <!-- VALIDACION DEL INPUT -->
+              <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+                ¡{{ userNameErrorsMessg }}!
+              </p>
+        </div>
+
+        <div class="flex flex-col mt-4">
+            <input type="text" placeholder="Nombre" class="placeholder-green-500 border-2 border-green-500 
+              bg-transparent rounded-lg text-green-500" required [(ngModel)]="employeeName" name="modelAsset">
+              <!-- VALIDACION DEL INPUT -->
+              <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+                ¡{{ nameErrorsMessg }}!
+              </p>
+        </div>
+
+        <div class="flex flex-col mt-4">
+            <input type="text" placeholder="Apellido" class="placeholder-green-500 border-2 border-green-500 
+              bg-transparent rounded-lg text-green-500" required [(ngModel)]="employeeLastName" name="markAsset">
+              <!-- VALIDACION DEL INPUT -->
+              <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+                ¡{{ lastNameErrorsMessg }}!
+              </p>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="w-full bg-green-500 border-2 border-green-500 text-black 
+                hover:bg-transparent hover:text-green-500 rounded-lg cursor-pointer p-2">
+                <b>Registrar</b>
+            </button>
+        </div>
+    </form>
+
+</section>

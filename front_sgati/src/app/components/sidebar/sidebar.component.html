@@ -1,0 +1,87 @@
+<!-- SIDEBAR DE LA APLICACION -->
+<aside *ngIf="userData" id="sidebar-multi-level-sidebar" aria-label="Sidebar"
+    class="fixed top-0 left-0 z-40 w-72 h-screen transition-transform -translate-x-full 
+    md:translate-x-0 bg-transparent border-r-2 border-green-500" 
+    style="backdrop-filter: blur(20px);">
+
+  <div class="h-full px-3 py-4 overflow-y-auto text-green-500 text-base">
+    <!-- LOGO IMAGEN  -->
+    <div class="flex justify-start border-b-2 mb-4 pb-3">
+      <a routerLink="/dashboard" class="cursor-pointer flex items-center">
+        <img src="logoSgati.png" class="w-10 h-10 cursor-pointer" routerLink="/"/>
+        <span class="text-xl mx-2"><b>Software GATI</b></span>
+      </a>
+    </div>
+
+    <ul class="space-y-2 font-medium">
+
+      <!-- USUARIO AUTENTICADO -->
+      <div class="flex items-center text-yellow-500 rounded-lg p-2">
+        <i class='bx bxs-user-rectangle mr-2'></i>
+        {{userAuthData.userName}}
+      </div>
+
+      <!-- LISTAS CON ENLACES -->
+      @for (item of SidebarData; track $index) {
+        @if (tieneAcceso(item.rolesPermitidos)) {
+          <div class="w-full rounded-lg hover:bg-gray-800">
+            <button type="button" (click)="toggleAccordion($index)" 
+              class="flex justify-between w-full cursor-pointer p-2">
+              <div class="text-start">
+                <i class='bx bxs-dashboard mr-2'></i>
+                {{ item.titulo }}
+              </div>
+              <i class="bx ml-5" [ngClass]="{'bxs-down-arrow': activeIndex !== $index, 'bxs-up-arrow': activeIndex === $index}"></i>
+            </button>
+            @if (activeIndex === $index) {
+              <ul class="py-2 space-y-2 transition-all duration-300 ease-in-out">
+                @for (link of item.links; track $index) {
+                  <li>
+                    <a [routerLink]="link.url" class="flex items-center w-full 
+                      cursor-pointer p-2 rounded-lg hover:bg-gray-700">
+                      <i class='bx bx-circle mr-2'></i>
+                      {{ link.subtitulo }}
+                    </a>
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+        }
+      }
+      <!-- CERRAR SESION -->
+      <div class="fixed bottom-0 w-full m-4">
+        <button (click)="cerrarSesion()" data-modal-target="modal-carga" data-modal-toggle="modal-carga" 
+          class="flex items-center w-60 cursor-pointer border p-2 rounded-lg 
+          bg-green-500 text-gray-950 hover:bg-transparent hover:text-green-500">
+          <i class='bx bxs-log-out mr-2'></i>
+          Cerrar sesión
+        </button>
+      </div>
+
+    </ul>
+  </div>
+
+</aside>
+
+<!-- MODAL DE CARGA MIENTRAS CIERRA LA SESION -->
+<div id="modal-carga" data-modal-backdrop="static"  tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden 
+    fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+  <div class="relative p-4 w-[500px] max-w-2xl max-h-full">
+      <!-- Modal content -->
+      <div class="relative border-2 border-green-500 rounded-lg shadow-sm" style="backdrop-filter: blur(50px);">
+          <!-- Modal body -->
+          <div class="p-4 md:p-5 space-y-4 flex flex-col justify-center items-center">
+              <div role="status">
+                  <svg aria-hidden="true" class="w-12 h-12 text-gray-950 animate-spin fill-green-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                      <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                  </svg>
+              </div>
+              <h1 class="text-3xl leading-relaxed text-green-500">
+                <b>¡Cerrando la sesión!</b>
+              </h1>
+          </div>
+      </div>
+  </div>
+</div>

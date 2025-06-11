@@ -1,0 +1,51 @@
+<!-- LOGIN DE INICIO DE SESION -->
+<section class="w-full flex flex-col justify-center items-center box-border min-h-screen">
+  
+  <!-- ALERTA PARA ERRORES -->
+  <app-alert-message 
+    [typeAlert]="'danger'"
+    [visible]="showAlertErros" 
+    [message]="messageErros" 
+    (closed)="onAlertClosed()" 
+  />
+  <!-- MENSAJE DE CARGA ESPERANDO RESPUESTA DEL BACK -->
+  <app-alert-message [cargando]="isCargando" [typeAlert]="'carga'"/>
+
+  <form (ngSubmit)="autenticarUsuario()" class="w-96 lg:px-8 lg:w-[450px] rounded-lg p-5 
+      bg-gray-950 border-2 border-green-500">
+      <h1 class="text-green-500 text-center text-2xl my-4">GESTIÓN DE ACTIVOS TI</h1>
+      
+      <hr class="mb-4">
+
+      <div class="flex flex-col mb-4">
+        <label class="text-lg text-green-500 mb-2">Nombre de Usuario:</label>
+        <input type="text" placeholder="Usuario" class="placeholder-green-500 border-2 border-green-500 
+          bg-transparent rounded-lg text-green-500" required [(ngModel)]="userName" name="UserName">
+          <!-- VALIDACION DEL INPUT -->
+          <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+            {{messageInputErroName}}
+          </p>
+      </div>
+
+      <div class="flex flex-col mb-4">
+        <label class="text-lg text-green-500 mb-2">Contraseña de Usuario:</label>
+        <input [type]="showPassword ? 'text' : 'password'" placeholder="Contraseña" class="placeholder-green-500 
+          border-2 border-green-500 text-green-500 relative bg-transparent rounded-lg" required 
+          [(ngModel)]="userPassword" name="UserPassword">
+          <i class='bx bx-low-vision absolute my-12 ml-[300px] lg:ml-[350px] cursor-pointer text-lg text-green-500'
+            [class]="showPassword ? 'bx bx-show' : 'bx bx-low-vision'"
+            (click)="passwordVisible()"></i>
+          <!-- VALIDACION DEL INPUT -->
+          <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+            {{messageInputErroPassword}}
+          </p>
+      </div>
+
+      <div class="w-full text-black my-5">
+        <button type="submit" class="w-full border text-gray-950 bg-green-500 p-2 
+          rounded-lg cursor-pointer hover:bg-transparent hover:text-green-500">
+          Ingresar
+        </button>
+      </div>
+  </form>
+</section>

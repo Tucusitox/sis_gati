@@ -1,0 +1,39 @@
+<section class="flex items-center justify-center min-h-screen lg:mt-auto md:ml-72 lg:my-0 my-10">
+  <div class="flex flex-col gap-4">
+    <!-- INICIO DEL BUCLE PARA ITERAR EL ARRAY DE OBJETOS "itemsCards" -->
+     @for (item of itemsCards; track $index) {
+      
+      @if (tieneAcceso(item.rolesPermitidos)) {
+
+        <div class="lg:w-[600px] lg:h-auto w-auto h-auto bg-gray-950 border-2
+            border-green-500 rounded-xl flex justify-center p-6">
+            
+          <div class="flex flex-col justify-center items-center gap-4 lg:mx-6 text-green-500">
+            <h2 class="text-2xl lg:text-3xl font-bold text-center">
+              <i [class]="item.icon"></i>
+              {{ item.title }}
+            </h2>
+
+            <!-- INICIO DEL BUCLE PARA LOS LINKS -->
+            <div class="flex flex-wrap justify-center gap-2 mx-1">
+              @for (link of item.links; track $index) {
+                <a [routerLink]="link.route"
+                  class="text-sm lg:text-base w-auto border-2 px-3 py-1 text-center rounded-lg text-gray-950 
+                  bg-green-500 border-green-500 hover:text-green-500 hover:bg-transparent">
+                  {{ link.name }}
+                </a>
+              }
+            </div>
+            <!-- FIN DEL BUCLE PARA LOS LINKS -->
+
+          </div>
+        </div>
+      }
+
+     }
+    <!-- FIN DEL BUCLE PARA "itemsCards" -->
+  </div>
+</section>
+
+
+

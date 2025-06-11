@@ -1,0 +1,136 @@
+<section class="mt-20 mb-10 md:ml-72 lg:my-0 p-4">
+        <div class="mb-4 border-b border-gray-500">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-styled-tab"
+                data-tabs-toggle="#default-styled-tab-content"
+                data-tabs-active-classes="text-green-500 hover:text-green-500 border-green-500"
+                data-tabs-inactive-classes="border-transparent text-gray-400 text-gray-400 hover:border-gray-400 border-gray-700 hover:text-gray-300"
+                role="tablist">
+                <li class="me-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg cursor-pointer" id="profile-styled-tab"
+                        data-tabs-target="#styled-profile" type="button" role="tab" aria-controls="profile"
+                        aria-selected="false">
+                        <i class='bx bxs-lock-alt'></i>
+                        Asignar Activo
+                    </button>
+                </li>
+                <li class="me-2" role="presentation">
+                    <button
+                        class="inline-block p-4 border-b-2 rounded-t-lg cursor-pointer
+                        hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                        id="dashboard-styled-tab" data-tabs-target="#styled-dashboard" type="button" role="tab"
+                        aria-controls="dashboard" aria-selected="false">
+                        <i class='bx bxs-lock-open-alt'></i> 
+                        Liberar Activo
+                    </button>
+                </li>
+            </ul>
+        </div>
+        
+        <div id="default-styled-tab-content">
+            <!-- ASIGNAR UN EQUIPO -->
+            <div class="p-4 rounded-xl bg-gray-200 dark:bg-gray-950 border-2 border-green-700" 
+                id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
+
+                <form class="w-full p-3" (ngSubmit)="assigmentAsset()">
+
+                    <h1 class="text-green-500 text-lg font-bold text-center">
+                        Por favor, indique el serial del equipo y el nombre de usuario del empleado al que se asignará
+                    </h1>
+
+                    <!-- MENSAJE DE CARGA ESPERANDO RESPUESTA DEL BACK -->
+                    <app-alert-message [cargando]="isCargando" [typeAlert]="'cargaModal'"/>
+
+                    <app-alert-message 
+                        [typeAlert]="'success'"
+                        [visible]="successRequest" 
+                        [message]="successMessage" 
+                        (closed)="onAlertClosed()" 
+                    />
+
+                    <app-alert-message 
+                        [typeAlert]="'danger'"
+                        [visible]="errorRequest" 
+                        [message]="assigmentFallido" 
+                        (closed)="onAlertClosed()" 
+                    />
+
+                    <div class="flex flex-col mt-4">
+                        <input type="text" placeholder="Serial del Equipo" class="placeholder-green-500 border-2 border-green-500 
+                            bg-transparent rounded-lg text-green-500" required [(ngModel)]="assetSerial" name="serialAsset">
+                            <!-- VALIDACION DEL INPUT -->
+                            <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+                                ¡{{ serialErrorsMessg }}!
+                            </p>
+                    </div>
+
+                    <div class="flex flex-col mt-4">
+                        <input type="text" placeholder="Usuario del Empleado" 
+                        class="placeholder-green-500 border-2 border-green-500 
+                        bg-transparent rounded-lg text-green-500" required [(ngModel)]="employeeUser" 
+                        name="modelAsset">
+                        <!-- VALIDACION DEL INPUT -->
+                        <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+                            ¡{{ employeeErrorsMessg }}!
+                        </p>
+                    </div>
+
+                    <div class="relative z-0 w-full mt-5 group">
+                        <button class="w-full border-2 border-green-500 cursor-pointer rounded-lg p-2 
+                            bg-green-500 hover:text-green-500 text-black font-bold hover:bg-transparent" 
+                            type="submit">
+                            Asignar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- LIBERAR UN EQUIPO -->
+            <div class="hidden p-4 rounded-xl bg-gray-200 dark:bg-gray-950 border-2 border-green-700"
+                id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                
+                <form (ngSubmit)="deleteAssigmentAsset()" class="w-full p-3">
+
+                    <h1 class="text-green-500 text-lg font-bold text-center">
+                        Por favor, indique el serial del equipo a liberar
+                    </h1>
+
+                    <!-- MENSAJE DE CARGA ESPERANDO RESPUESTA DEL BACK -->
+                    <app-alert-message [cargando]="isCargando" [typeAlert]="'cargaModal'"/>
+
+                    <app-alert-message 
+                        [typeAlert]="'success'"
+                        [visible]="successRequest" 
+                        [message]="successMessage" 
+                        (closed)="onAlertClosed()" 
+                    />
+
+                    <app-alert-message 
+                        [typeAlert]="'danger'"
+                        [visible]="errorRequest" 
+                        [message]="assigmentFallido" 
+                        (closed)="onAlertClosed()" 
+                    />
+
+                    <div class="flex flex-col mt-4">
+                        <input type="text" placeholder="Serial del Equipo" class="placeholder-green-500 border-2 border-green-500 
+                            bg-transparent rounded-lg text-green-500" required [(ngModel)]="deleteAssetSerial" name="serialAsset">
+                            <!-- VALIDACION DEL INPUT -->
+                            <p *ngIf="inputsValidate" class="text-red-700 mt-2 ml-1">
+                                ¡{{ serialDeleteAssigErrorsMessg }}!
+                            </p>
+                    </div>
+
+                    <div class="relative z-0 w-full mt-5 group">
+                        <button class="w-full border-2 border-green-500 cursor-pointer rounded-lg p-2 
+                            bg-green-500 hover:text-green-500 text-black font-bold hover:bg-transparent" 
+                            type="submit">
+                            Liberal
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+</section>
+
+
