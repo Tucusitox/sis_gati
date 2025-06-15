@@ -9,7 +9,7 @@ class GetAssetsController
     // METODO PARA TRAER TODOS LOS ACTIVOS EXISTENTES
     public function getAllAssets()
     {
-        $AllActivos = Asset::select('id_asset',
+        $AllActivos = Asset::select('id_asset','assets.fk_location','id_typeAsset',
             'asset_serial','asset_model','asset_mark','asset_dateRegister','asset_status',
             'typeAsset_name','date_assignment','city','sede','store','employee_userName'
             )
